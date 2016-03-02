@@ -131,6 +131,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
+    public void onShowcaseViewTouchAllowed(MotionEvent motionEvent) {
+
+    }
+
+    @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
         startActivity(new Intent(this, DemoOption.values()[position].activityClass));
     }

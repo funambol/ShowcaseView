@@ -73,6 +73,11 @@ public class EventsActivity extends AppCompatActivity {
             append("Touch blocked: x: " + motionEvent.getX() + " y: " + motionEvent.getY());
         }
 
+        @Override
+        public void onShowcaseViewTouchAllowed(MotionEvent motionEvent) {
+            append("Touch allowed: x: " + motionEvent.getX() + " y: " + motionEvent.getY());
+        }
+
     }
 
     private class ShakeButtonListener extends SimpleShowcaseEventListener {

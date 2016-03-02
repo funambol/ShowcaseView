@@ -46,6 +46,14 @@ public interface OnShowcaseEventListener {
     void onShowcaseViewTouchBlocked(MotionEvent motionEvent);
 
     /**
+     *
+     * Called when the user has touched on the ShowcaseView, and the the touch was not blocked
+     * @param motionEvent the blocked event
+     */
+    void onShowcaseViewTouchAllowed(MotionEvent motionEvent);
+
+
+    /**
      * Empty implementation of OnShowcaseViewEventListener such that null
      * checks aren't needed
      */
@@ -67,6 +75,11 @@ public interface OnShowcaseEventListener {
 
         @Override
         public void onShowcaseViewTouchBlocked(MotionEvent motionEvent) {
+
+        }
+
+        @Override
+        public void onShowcaseViewTouchAllowed(MotionEvent motionEvent) {
 
         }
     };

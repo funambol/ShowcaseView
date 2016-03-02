@@ -45,4 +45,11 @@ public class MultiEventListener implements OnShowcaseEventListener {
             listener.onShowcaseViewTouchBlocked(motionEvent);
         }
     }
+
+    @Override
+    public void onShowcaseViewTouchAllowed(MotionEvent motionEvent) {
+        for (OnShowcaseEventListener listener : listeners) {
+            listener.onShowcaseViewTouchAllowed(motionEvent);
+        }
+    }
 }

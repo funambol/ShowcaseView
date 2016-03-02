@@ -382,6 +382,8 @@ public class ShowcaseView extends RelativeLayout
         boolean blocked = blockTouches && distanceFromFocus > showcaseDrawer.getBlockedRadius();
         if (blocked) {
             mEventListener.onShowcaseViewTouchBlocked(motionEvent);
+        } else {
+            mEventListener.onShowcaseViewTouchAllowed(motionEvent);
         }
         return blocked;
     }
