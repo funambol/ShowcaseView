@@ -18,6 +18,7 @@ package com.github.amlcurran.showcaseview;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -30,9 +31,12 @@ import android.text.Layout;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.view.KeyCharacterMap;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RelativeLayout;
@@ -95,6 +99,8 @@ public class ShowcaseView extends RelativeLayout
     private boolean blockAllTouches;
     private final int[] positionInWindow = new int[2];
 
+
+
     protected ShowcaseView(Context context, boolean newStyle) {
         this(context, null, R.styleable.CustomTheme_showcaseViewStyle, newStyle);
     }
@@ -139,7 +145,7 @@ public class ShowcaseView extends RelativeLayout
 
         if (mEndButton.getParent() == null) {
             int margin = (int) getResources().getDimension(R.dimen.button_margin);
-            RelativeLayout.LayoutParams lps = (LayoutParams) generateDefaultLayoutParams();
+            RelativeLayout.LayoutParams lps = getInitialEndButtonLayoutParams();
             lps.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
             lps.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
             lps.setMargins(margin, margin, margin, margin);
@@ -152,6 +158,39 @@ public class ShowcaseView extends RelativeLayout
         }
 
     }
+
+    private int getNavBarHeight() {
+        if (isNavigationBarVisible()) {
+            Resources resources = getContext().getResources();
+            int resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android");
+            if (resourceId > 0) {
+                return resources.getDimensionPixelSize(resourceId);
+            }
+        }
+        return 0;
+    }
+
+    private boolean isNavigationBarVisible() {
+
+        boolean hasMenuKey = true;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+            hasMenuKey = ViewConfiguration.get(getContext()).hasPermanentMenuKey();
+        }
+        boolean hasBackKey = KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_BACK);
+
+        return (!hasMenuKey && !hasBackKey) ;
+    }
+
+
+    private RelativeLayout.LayoutParams getInitialEndButtonLayoutParams() {
+        int margin = (int) getResources().getDimension(R.dimen.button_margin);
+        RelativeLayout.LayoutParams lps = (LayoutParams) generateDefaultLayoutParams();
+
+        lps.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        lps.setMargins(margin,margin,margin,margin+getNavBarHeight());
+        return lps;
+    }
+
 
     private boolean hasShot() {
         return shotStateStore.hasShot();
@@ -168,7 +207,14 @@ public class ShowcaseView extends RelativeLayout
         getLocationInWindow(positionInWindow);
         showcaseX = x - positionInWindow[0];
         showcaseY = y - positionInWindow[1];
-        //init();
+        int h = getHeight();
+        if (showcaseX > (float)getWidth()-mEndButton.getWidth()) {
+            RelativeLayout.LayoutParams lps = getInitialEndButtonLayoutParams();
+            lps.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+            mEndButton.setLayoutParams(lps);
+        }
+
+//init();
         recalculateText();
         invalidate();
     }
